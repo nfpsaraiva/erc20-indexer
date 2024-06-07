@@ -1,12 +1,12 @@
-import { Box, Button, Card, Center, Flex, Group, Image, SimpleGrid, Stack, Text, TextInput, Title } from '@mantine/core';
-import { Alchemy, Network, Utils } from 'alchemy-sdk';
-import { useState } from 'react';
+import { Button, Card, Center, Group, Image, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Alchemy, Network, TokenBalancesResponseErc20, TokenMetadataResponse, Utils } from 'alchemy-sdk';
+import { FC, useState } from 'react';
 
-function App() {
+const App: FC = () => {
   const [userAddress, setUserAddress] = useState('0xDa52002ddB5ad541d1559466Fd7505c562480dD8');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<TokenBalancesResponseErc20>();
   const [hasQueried, setHasQueried] = useState(false);
-  const [tokenDataObjects, setTokenDataObjects] = useState([]);
+  const [tokenDataObjects, setTokenDataObjects] = useState<TokenMetadataResponse[]>([]);
 
   async function getTokenBalance() {
     const config = {
@@ -28,7 +28,9 @@ function App() {
       tokenDataPromises.push(tokenData);
     }
 
-    setTokenDataObjects(await Promise.all(tokenDataPromises));
+    const tokenDataObjects = await Promise.all(tokenDataPromises);
+
+    setTokenDataObjects(tokenDataObjects);
     setHasQueried(true);
   }
   return (
@@ -46,14 +48,20 @@ function App() {
         </Button>
 
         {
-          hasQueried &&
+          hasQueried && results &&
           results.tokenBalances.map((token, i) => {
+            const tokenBalance = Number(token.tokenBalance);
+            const decimals = Number(tokenDataObjects[i].decimals);
+            console.log("tokenBalance", tokenBalance);
+            console.log("decimals", decimals);
+            console.log(Utils.formatUnits(tokenBalance, decimals));
+
             return (
               <Card key={i}>
                 <Stack>
                   <Image src={tokenDataObjects[i].logo} />
                   <Text>Token: {tokenDataObjects[i].symbol}</Text>
-                  <Text>Balance: {Utils.formatUnits(token.tokenBalance, tokenDataObjects[i].decimals)}</Text>
+                  {/* <Text>Balance: {Utils.formatUnits(Number(token.tokenBalance), Number(tokenDataObjects[i].decimals))}</Text> */}
                   <Group></Group>
                 </Stack>
               </Card>
