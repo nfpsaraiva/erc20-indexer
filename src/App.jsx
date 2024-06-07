@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Image, SimpleGrid, TextInput, Title } from '@mantine/core';
+import { Box, Button, Card, Center, Flex, Group, Image, SimpleGrid, Stack, Text, TextInput, Title } from '@mantine/core';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useState } from 'react';
 
@@ -32,56 +32,36 @@ function App() {
     setHasQueried(true);
   }
   return (
-    <Box w="100vw">
-      <Flex
-        w="100%"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent={'center'}
-      >
+    <Center>
+      <Stack>
+        <Title>ERC-20 Indexer</Title>
+
         <TextInput
-          onChange={(e) => setUserAddress(e.target.value)}
-          color="black"
-          w="600px"
-          textAlign="center"
-          p={4}
-          bgColor="white"
-          fontSize={24}
+          label="Type an address"
           value={userAddress}
+          onChange={e => setUserAddress(e.target.value)}
         />
-        <Button fontSize={20} onClick={getTokenBalance} mt={36} bgColor="blue">
-          Check ERC-20 Token Balances
+        <Button onClick={getTokenBalance}>
+          Show Tokens
         </Button>
 
-        <Title my={36}>ERC-20 token balances:</Title>
-
-        {hasQueried &&
-          results.tokenBalances.map((e, i) => {
+        {
+          hasQueried &&
+          results.tokenBalances.map((token, i) => {
             return (
-              <Flex
-                flexDir={'column'}
-                color="white"
-                bg="blue"
-                w={'20vw'}
-                key={e.id}
-              >
-                <Box>
-                  <b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
-                </Box>
-                <Box>
-                  <b>Balance:</b>&nbsp;
-                  {Utils.formatUnits(
-                    e.tokenBalance,
-                    tokenDataObjects[i].decimals
-                  )}
-                </Box>
-                <Image src={tokenDataObjects[i].logo} />
-              </Flex>
+              <Card key={i}>
+                <Stack>
+                  <Image src={tokenDataObjects[i].logo} />
+                  <Text>Token: {tokenDataObjects[i].symbol}</Text>
+                  <Text>Balance: {Utils.formatUnits(token.tokenBalance, tokenDataObjects[i].decimals)}</Text>
+                  <Group></Group>
+                </Stack>
+              </Card>
             );
           })
         }
-      </Flex>
-    </Box>
+      </Stack>
+    </Center>
   );
 }
 
