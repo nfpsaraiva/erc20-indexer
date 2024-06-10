@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IconApps, IconDotsVertical, IconInfoCircle, IconMenu, IconMenu2, IconMessage, IconSettings } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import ColorThemeSwitcher from './ColorThemeSwitcher/ColorThemeSwitcher';
+import SendFeedbackButton from './features/SendFeedback/SendFeedbackButton';
 
 const App: FC = () => {
   const [address, setAddress] = useState('');
@@ -61,7 +62,7 @@ const App: FC = () => {
 
       return tokens;
     },
-    enabled: address !== ""
+    enabled: address !== "" 
   });
 
   return (
@@ -116,7 +117,7 @@ const App: FC = () => {
               <Collapse in={opened}>
                 <Stack gap={"xs"}>
                   <Button leftSection={<IconApps size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>More apps</Button>
-                  <Button leftSection={<IconMessage size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>Send feedback</Button>
+                  <SendFeedbackButton />
                   <Button leftSection={<IconInfoCircle size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>About</Button>
                 </Stack>
               </Collapse>
