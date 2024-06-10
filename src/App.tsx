@@ -1,12 +1,14 @@
-import { ActionIcon, Anchor, Box, Button, Card, Center, Checkbox, Chip, Group, Loader, Stack, Text, TextInput, Title, UnstyledButton } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Burger, Button, Card, Center, Checkbox, Chip, Collapse, Group, Image, Loader, Menu, Stack, Text, TextInput, Title, UnstyledButton } from '@mantine/core';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { FC, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { IconSettings } from '@tabler/icons-react';
+import { IconDotsVertical, IconInfoCircle, IconMenu, IconMenu2, IconMessage, IconSettings } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
 
 const App: FC = () => {
   const [address, setAddress] = useState('');
   const [emptyBalances, setEmptyBalances] = useState(false);
+  const [opened, { toggle }] = useDisclosure(false);
 
   const alchemy = new Alchemy({
     apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
@@ -37,6 +39,8 @@ const App: FC = () => {
 
         return {
           name: token.name,
+          logo: token.logo,
+          address: data.tokenBalances[i].contractAddress,
           link,
           balance: value
         }
@@ -60,7 +64,7 @@ const App: FC = () => {
 
   return (
     <Center my={"xl"} mx={"sm"}>
-      <Card radius={"lg"} shadow='lg' padding={"xl"} withBorder>
+      <Card radius={"lg"} shadow='lg' padding={"md"} withBorder>
         <Card.Section py={"md"} inheritPadding withBorder>
           <Stack>
             <Stack gap={4}>
@@ -84,13 +88,30 @@ const App: FC = () => {
                   checked={emptyBalances}
                   onChange={() => setEmptyBalances(emptyBalances => !emptyBalances)}
                 >
-                  Empty balances
+                  Show Empty balances
                 </Chip>
 
-                <ActionIcon variant='transparent'>
-                  <IconSettings size={18} />
-                </ActionIcon>
+                <Group gap={"xs"}>
+                  <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
+                  {/* <ActionIcon onClick={toggle} variant='transparent'>
+                        <IconMenu2 size={18} />
+                      </ActionIcon> */}
+                  {/* <Menu>
+                    <Menu.Target>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item leftSection={<IconMessage size={16} />}>Send feedback</Menu.Item>
+                      <Menu.Item leftSection={<IconInfoCircle size={16} />}>About</Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu> */}
+                </Group>
               </Group>
+              <Collapse in={opened}>
+                <Stack gap={"xs"}>
+                  <Button size='xs' variant='subtle' >Send feedback</Button>
+                  <Button size='xs' variant='subtle' >About</Button>
+                </Stack>
+              </Collapse>
             </Stack>
           </Stack>
         </Card.Section>
@@ -107,15 +128,22 @@ const App: FC = () => {
               <Text>No tokens found</Text>
             </Center>
           }
-          <Stack gap={"xs"}>
+          <Stack gap={"md"}>
             {
               tokens && tokens.map(token => {
                 return (
-                  <Group key={token.name} justify='space-between'>
-                    <Anchor c={'var(--mantine-color-text)'} target='_blank' href={token.link}>
-                      {token.name}
-                    </Anchor>
-                    <Text>{token.balance}</Text>
+                  <Group key={token.name} justify='space-between' gap={"xl"} align='center' wrap='nowrap'>
+                    <Group>
+                      <Stack gap={2} align='start'>
+                        <Anchor size='sm' c={'var(--mantine-color-text)'} target='_blank' href={token.link}>
+                          {token.name}
+                        </Anchor>
+                        <UnstyledButton>
+                          <Text size='xs' c={'dimmed'}>{token.address}</Text>
+                        </UnstyledButton>
+                      </Stack>
+                    </Group>
+                    <Text size='sm'>{token.balance}</Text>
                   </Group>
                 )
               })
