@@ -91,25 +91,12 @@ const App: FC = () => {
                   Show Empty balances
                 </Chip>
 
-                <Group gap={"xs"}>
-                  <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
-                  {/* <ActionIcon onClick={toggle} variant='transparent'>
-                        <IconMenu2 size={18} />
-                      </ActionIcon> */}
-                  {/* <Menu>
-                    <Menu.Target>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                      <Menu.Item leftSection={<IconMessage size={16} />}>Send feedback</Menu.Item>
-                      <Menu.Item leftSection={<IconInfoCircle size={16} />}>About</Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu> */}
-                </Group>
+                <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
               </Group>
               <Collapse in={opened}>
                 <Stack gap={"xs"}>
-                  <Button size='xs' variant='subtle' >Send feedback</Button>
-                  <Button size='xs' variant='subtle' >About</Button>
+                  <Button size='xs' variant='subtle' color='var(--mantine-color-text)'>Send feedback</Button>
+                  <Button size='xs' variant='subtle' color='var(--mantine-color-text)'>About</Button>
                 </Stack>
               </Collapse>
             </Stack>
