@@ -4,6 +4,7 @@ import { FC, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { IconDotsVertical, IconInfoCircle, IconMenu, IconMenu2, IconMessage, IconSettings } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
+import ColorThemeSwitcher from './ColorThemeSwitcher/ColorThemeSwitcher';
 
 const App: FC = () => {
   const [address, setAddress] = useState('');
@@ -64,12 +65,12 @@ const App: FC = () => {
 
   return (
     <Center my={"xl"} mx={"sm"}>
-      <Card radius={"lg"} shadow='lg' padding={"md"} withBorder>
+      <Card radius={"lg"} shadow='lg' padding={"lg"} withBorder>
         <Card.Section py={"md"} inheritPadding withBorder>
           <Stack>
             <Stack gap={4}>
-              <Title order={3}>Show me the tokens</Title>
-              <Text c={"dimmed"} size='xs'>Ethereum network</Text>
+              <Title order={2}>Show me the tokens</Title>
+              <Text c={"dimmed"} size='sm'>Ethereum network</Text>
             </Stack>
             <Stack>
               <TextInput
@@ -79,8 +80,10 @@ const App: FC = () => {
                 value={address}
                 onChange={e => setAddress(e.target.value)}
               />
-              <Button size='xs'>Connect Wallet</Button>
+              <Button size='sm'>Connect Wallet</Button>
+
               <Group justify='space-between'>
+                <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
                 <Chip
                   variant='light'
                   radius={"sm"}
@@ -88,15 +91,16 @@ const App: FC = () => {
                   checked={emptyBalances}
                   onChange={() => setEmptyBalances(emptyBalances => !emptyBalances)}
                 >
-                  Show Empty balances
+                  Show empty balances
                 </Chip>
+                <ColorThemeSwitcher />
 
-                <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
+
               </Group>
               <Collapse in={opened}>
                 <Stack gap={"xs"}>
-                  <Button size='xs' variant='subtle' color='var(--mantine-color-text)'>Send feedback</Button>
-                  <Button size='xs' variant='subtle' color='var(--mantine-color-text)'>About</Button>
+                  <Button leftSection={<IconMessage size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>Send feedback</Button>
+                  <Button leftSection={<IconInfoCircle size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>About</Button>
                 </Stack>
               </Collapse>
             </Stack>
