@@ -2,7 +2,7 @@ import { ActionIcon, Anchor, Box, Burger, Button, Card, Center, Checkbox, Chip, 
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { FC, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { IconDotsVertical, IconInfoCircle, IconMenu, IconMenu2, IconMessage, IconSettings } from '@tabler/icons-react';
+import { IconApps, IconDotsVertical, IconInfoCircle, IconMenu, IconMenu2, IconMessage, IconSettings } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import ColorThemeSwitcher from './ColorThemeSwitcher/ColorThemeSwitcher';
 
@@ -10,6 +10,7 @@ const App: FC = () => {
   const [address, setAddress] = useState('');
   const [emptyBalances, setEmptyBalances] = useState(false);
   const [opened, { toggle }] = useDisclosure(false);
+  const [manualAddress, manualAddressHandle] = useDisclosure(false);
 
   const alchemy = new Alchemy({
     apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
@@ -73,14 +74,29 @@ const App: FC = () => {
               <Text c={"dimmed"} size='sm'>Ethereum network</Text>
             </Stack>
             <Stack>
-              <TextInput
-                autoFocus
-                placeholder='Enter a wallet address'
-                style={{ textAlign: "center" }}
-                value={address}
-                onChange={e => setAddress(e.target.value)}
-              />
-              <Button size='sm'>Connect Wallet</Button>
+
+              <Stack gap={"xs"}>
+                {
+                  manualAddress
+                    ? <TextInput
+                      autoFocus
+                      placeholder='Enter a wallet address'
+                      style={{ textAlign: "center" }}
+                      value={address}
+                      onChange={e => setAddress(e.target.value)}
+                    />
+                    : <Button size='sm'>Connect Wallet</Button>
+                }
+                <Center>
+                  <UnstyledButton onClick={manualAddressHandle.toggle}>
+                    <Text c={"dimmed"} size='sm'>
+                      {
+                        manualAddress ? 'Or connect wallet' : 'Or enter address'
+                      }
+                    </Text>
+                  </UnstyledButton>
+                </Center>
+              </Stack>
 
               <Group justify='space-between'>
                 <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
@@ -99,6 +115,7 @@ const App: FC = () => {
               </Group>
               <Collapse in={opened}>
                 <Stack gap={"xs"}>
+                  <Button leftSection={<IconApps size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>More apps</Button>
                   <Button leftSection={<IconMessage size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>Send feedback</Button>
                   <Button leftSection={<IconInfoCircle size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>About</Button>
                 </Stack>
