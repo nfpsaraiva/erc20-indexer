@@ -24,7 +24,6 @@ const App: FC = () => {
 
       const tokensPromises = [];
       for (let i = 0; i < data.tokenBalances.length; i++) {
-        console.log(data.tokenBalances[i].contractAddress);
         const tokenData = alchemy.core.getTokenMetadata(data.tokenBalances[i].contractAddress);
 
         tokensPromises.push(tokenData);
@@ -62,7 +61,7 @@ const App: FC = () => {
   return (
     <Center my={"xl"} mx={"sm"}>
       <Card radius={"lg"} shadow='lg' padding={"xl"} withBorder>
-        <Card.Section py={"md"} inheritPadding withBorder>
+        <Card.Section  py={"md"} inheritPadding withBorder>
           <Stack>
             <Stack gap={4}>
               <Title order={3}>Show me the tokens</Title>
