@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IconSettings } from '@tabler/icons-react';
 
 const App: FC = () => {
-  const [address, setAddress] = useState('0xDa52002ddB5ad541d1559466Fd7505c562480dD8');
+  const [address, setAddress] = useState('');
   const [emptyBalances, setEmptyBalances] = useState(false);
 
   const alchemy = new Alchemy({
@@ -61,7 +61,7 @@ const App: FC = () => {
   return (
     <Center my={"xl"} mx={"sm"}>
       <Card radius={"lg"} shadow='lg' padding={"xl"} withBorder>
-        <Card.Section  py={"md"} inheritPadding withBorder>
+        <Card.Section py={"md"} inheritPadding withBorder>
           <Stack>
             <Stack gap={4}>
               <Title order={3}>Show me the tokens</Title>
@@ -78,6 +78,7 @@ const App: FC = () => {
               <Button size='xs'>Connect Wallet</Button>
               <Group justify='space-between'>
                 <Chip
+                  variant='light'
                   radius={"sm"}
                   size='xs'
                   checked={emptyBalances}
