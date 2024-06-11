@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { formatBalance, isEns } from "./utils";
 import { Alchemy, Network } from "alchemy-sdk";
 
@@ -11,11 +11,14 @@ const useTokens = (
   address: string,
   manualAddress: string,
   emptyBalances: boolean,
-  manualAddressOpened: boolean
+  manualAddressOpened: boolean,
 ) => {
-  return useQuery({
+  const LIMIT = 3;
+
+  return useInfiniteQuery({
     queryKey: ["tokens", address, manualAddress, emptyBalances, manualAddressOpened],
-    queryFn: async () => {
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
       let userAddress = address as string;
 
       if (manualAddressOpened) {
@@ -30,40 +33,38 @@ const useTokens = (
 
       const data = await alchemy.core.getTokenBalances(userAddress);
 
-      const tokensPromises = [];
-      for (let i = 0; i < data.tokenBalances.length; i++) {
-        const tokenData = alchemy.core.getTokenMetadata(data.tokenBalances[i].contractAddress);
+      let tokens = [];
+      for (let i = pageParam; i < (pageParam + LIMIT); i++) {
+        const {contractAddress, tokenBalance} = data.tokenBalances[i];
+        const fomattedBalance = formatBalance(tokenBalance);
 
-        tokensPromises.push(tokenData);
-      }
+        if (!emptyBalances && fomattedBalance === '0') {
+          continue;
+        }
 
-      const tokensMetadataResponse = await Promise.all(tokensPromises);
+        const token = await alchemy.core.getTokenMetadata(contractAddress);
+        const link = `https://etherscan.io/address/${contractAddress}`;
 
-      let tokens = tokensMetadataResponse.map((token, i) => {
-        const value = formatBalance(data.tokenBalances[i].tokenBalance);
-        const link = `https://etherscan.io/address/${data.tokenBalances[i].contractAddress}`;
-
-        return {
+        tokens.push({
           name: token.name,
           logo: token.logo,
           address: data.tokenBalances[i].contractAddress,
           link,
-          balance: value
-        }
-      });
+          balance: fomattedBalance
+        });
+      }
+
 
       if (!emptyBalances) {
         tokens = tokens.filter(token => Number(token.balance) > 0);
       }
 
-      tokens.sort((a, b) => {
-        if (a.balance < b.balance) return 1;
-        if (a.balance > b.balance) return -1;
-
-        return 0;
-      })
-
       return tokens;
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < LIMIT) return null;
+
+      return allPages.length * LIMIT
     },
     enabled: manualAddress.length === 42 || isEns(manualAddress) || !manualAddressOpened,
   });

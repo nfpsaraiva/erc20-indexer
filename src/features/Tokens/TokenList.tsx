@@ -16,7 +16,15 @@ const TokenList: FC<TokenListProps> = ({
   manualAddressOpened
 }: TokenListProps) => {
 
-  const { data: tokens, isLoading, isError } = useTokens(
+  const {
+    data: tokens,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching
+  } = useTokens(
     address as string,
     manualAddress,
     emptyBalances,
@@ -32,31 +40,46 @@ const TokenList: FC<TokenListProps> = ({
         </Center>
       }
       {
-        (isError || (tokens && tokens.length === 0)) &&
+        (isError || (tokens && tokens.pages.length === 0)) &&
         <Center>
           <Text>No tokens found</Text>
         </Center>
       }
       <Stack gap={"md"}>
         {
-          tokens && tokens.map(token => {
-            return (
-              <Group key={token.name} justify='space-between' gap={"xl"} align='center' wrap='nowrap'>
-                <Group>
-                  <Stack gap={2} align='start'>
-                    <Anchor size='sm' c={'var(--mantine-color-text)'} target='_blank' href={token.link}>
-                      {token.name}
-                    </Anchor>
-                    <UnstyledButton>
-                      <Text size='xs' c={'dimmed'}>{token.address}</Text>
-                    </UnstyledButton>
-                  </Stack>
+          tokens && tokens.pages.map(page => {
+            return page.map(token => {
+              return (
+                <Group key={token.name} justify='space-between' gap={"xl"} align='center' wrap='nowrap'>
+                  <Group>
+                    <Stack gap={2} align='start'>
+                      <Anchor size='sm' c={'var(--mantine-color-text)'} target='_blank' href={token.link}>
+                        {token.name}
+                      </Anchor>
+                      <UnstyledButton>
+                        <Text size='xs' c={'dimmed'}>{token.address}</Text>
+                      </UnstyledButton>
+                    </Stack>
+                  </Group>
+                  <Text size='sm'>{token.balance}</Text>
                 </Group>
-                <Text size='sm'>{token.balance}</Text>
-              </Group>
-            )
+              )
+            })
           })
         }
+        <div>
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={!hasNextPage || isFetchingNextPage}
+          >
+            {isFetchingNextPage
+              ? 'Loading more...'
+              : hasNextPage
+                ? 'Load More'
+                : 'Nothing more to load'}
+          </button>
+        </div>
+        <div>{isFetching && !isFetchingNextPage ? 'Fetching...' : null}</div>
       </Stack>
     </Box>
   )
