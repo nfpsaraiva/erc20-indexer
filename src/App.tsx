@@ -1,11 +1,12 @@
-import { ActionIcon, Anchor, Box, Burger, Button, Card, Center, Checkbox, Chip, Collapse, Group, Image, Loader, Menu, Stack, Text, TextInput, Title, UnstyledButton } from '@mantine/core';
+import { Anchor, Box, Burger, Button, Card, Center, Chip, Collapse, Group, Loader, Stack, Text, TextInput, Title, UnstyledButton } from '@mantine/core';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { FC, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { IconApps, IconDotsVertical, IconInfoCircle, IconMenu, IconMenu2, IconMessage, IconSettings } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
-import ColorThemeSwitcher from './ColorThemeSwitcher/ColorThemeSwitcher';
+import ColorThemeSwitcher from './features/ColorThemeSwitcher/ColorThemeSwitcher';
 import SendFeedbackButton from './features/SendFeedback/SendFeedbackButton';
+import AboutButton from './features/About/AboutButton';
+import MoreAppsButton from './features/MoreApps/MoreAppsButton';
 
 const App: FC = () => {
   const [address, setAddress] = useState('');
@@ -22,10 +23,19 @@ const App: FC = () => {
     return Number(Utils.formatEther(Number(balance).toString())).toFixed(2);
   }
 
+  const isEns = (address: string) => address.substring(address.length - 4, address.length) === '.eth';
+
   const { data: tokens, isLoading, isError } = useQuery({
     queryKey: ["tokens", address, emptyBalances],
     queryFn: async () => {
-      const data = await alchemy.core.getTokenBalances(address);
+
+      const ethAddress = isEns(address)
+       ? await alchemy.core.resolveName(address)
+       : address;
+
+       if (ethAddress === null) throw new Error('Address not found');
+
+      const data = await alchemy.core.getTokenBalances(ethAddress);
 
       const tokensPromises = [];
       for (let i = 0; i < data.tokenBalances.length; i++) {
@@ -62,7 +72,7 @@ const App: FC = () => {
 
       return tokens;
     },
-    enabled: address !== "" 
+    enabled: address.length === 42 || isEns(address)
   });
 
   return (
@@ -116,9 +126,9 @@ const App: FC = () => {
               </Group>
               <Collapse in={opened}>
                 <Stack gap={"xs"}>
-                  <Button leftSection={<IconApps size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>More apps</Button>
+                  <MoreAppsButton />
                   <SendFeedbackButton />
-                  <Button leftSection={<IconInfoCircle size={16} />} size='sm' variant='subtle' color='var(--mantine-color-text)'>About</Button>
+                  <AboutButton />
                 </Stack>
               </Collapse>
             </Stack>
