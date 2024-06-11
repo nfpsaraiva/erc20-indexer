@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { formatBalance, isEns } from "./utils";
 import { Alchemy, Network } from "alchemy-sdk";
 

@@ -1,5 +1,5 @@
 import { Button, Center, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
-import { useWeb3ModalAccount } from "@web3modal/ethers5/react";
+import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers5/react";
 import { FC } from "react";
 
 interface WalletProps {
@@ -16,6 +16,7 @@ const Wallet: FC<WalletProps> = ({
   manualAddressToggle
 }: WalletProps) => {
   const { isConnected } = useWeb3ModalAccount();
+  const { open } = useWeb3Modal();
 
   return (
     <Stack gap={"xs"}>
