@@ -37,13 +37,18 @@ const Wallet: FC<WalletProps> = ({
           )
       }
       <Center>
-        <UnstyledButton onClick={manualAddressToggle}>
-          <Text c={"dimmed"} size='sm'>
-            {
-              manualAddressOpened ? 'Or use wallet' : 'Or enter address'
-            }
-          </Text>
-        </UnstyledButton>
+        <Button
+          variant="subtle"
+          size="xs"
+          color="--var(mantine-color-text)"
+          px={"xl"}
+          c={"dimmed"}
+          onClick={manualAddressToggle}
+        >
+          {
+            manualAddressOpened ? 'Or use wallet' : 'Or enter address'
+          }
+        </Button>
       </Center>
     </Stack>
   )
