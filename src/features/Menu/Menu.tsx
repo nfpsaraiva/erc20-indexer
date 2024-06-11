@@ -1,4 +1,4 @@
-import { Burger, Button, Chip, Collapse, Group, Stack } from "@mantine/core";
+import { Burger, Button, Collapse, Group, Stack } from "@mantine/core";
 import { FC } from "react";
 import ColorThemeSwitcher from "./ColorThemeSwitcher/ColorThemeSwitcher";
 import MoreAppsButton from "./MoreApps/MoreAppsButton";

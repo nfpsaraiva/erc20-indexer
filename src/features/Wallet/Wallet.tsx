@@ -1,4 +1,4 @@
-import { Button, Center, Stack, Text, TextInput, UnstyledButton } from "@mantine/core";
+import { Button, Center, Stack, TextInput } from "@mantine/core";
 import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers5/react";
 import { FC } from "react";
 

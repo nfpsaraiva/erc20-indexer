@@ -1,4 +1,4 @@
-import { ActionIcon, Anchor, Box, Center, CopyButton, Group, Loader, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Anchor, CopyButton, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { FC } from "react";
 import { IconCheck, IconCopy, IconExternalLink } from "@tabler/icons-react";
 
