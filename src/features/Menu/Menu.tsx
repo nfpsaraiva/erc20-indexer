@@ -1,29 +1,44 @@
-import { Burger, Button, Collapse, Group, Stack } from "@mantine/core";
+import { ActionIcon, Burger, Button, Collapse, Group, Stack, Text } from "@mantine/core";
 import { FC } from "react";
 import ColorThemeSwitcher from "./ColorThemeSwitcher/ColorThemeSwitcher";
+import { useDisclosure } from "@mantine/hooks";
 import MoreAppsButton from "./MoreApps/MoreAppsButton";
 import SendFeedbackButton from "./SendFeedback/SendFeedbackButton";
 import AboutButton from "./About/AboutButton";
-import { useDisclosure } from "@mantine/hooks";
+import { IconRefresh } from "@tabler/icons-react";
 
 interface MenuProps {
-  refetch: any
+  tokensCount: number | undefined,
+  refetch: any,
+  isRefetching: any
 }
 
-const Menu: FC<MenuProps> = ({ refetch }: MenuProps) => {
+const Menu: FC<MenuProps> = ({ tokensCount, refetch, isRefetching }: MenuProps) => {
   const [opened, { toggle }] = useDisclosure(false);
 
   return (
     <>
-      <Group justify='space-between'>
+      <Group justify='space-between' wrap="nowrap">
         <Burger onClick={toggle} opened={opened} color='orange.5' size={"sm"} />
-        <Button onClick={refetch} size="compact-xs" px={"lg"}>Get tokens</Button>
+        {
+          tokensCount !== undefined &&
+          (
+            isRefetching
+              ? <Text size="sm">Refetching...</Text>
+              : <Group>
+                <Text size="sm">{tokensCount} tokens found</Text>
+                <ActionIcon disabled={isRefetching} size={"xs"} onClick={refetch} variant="subtle">
+                  <IconRefresh size={14} />
+                </ActionIcon>
+              </Group>
+          )
+        }
         <ColorThemeSwitcher />
-      </Group>
+      </Group >
       <Collapse in={opened}>
         <Stack gap={"xs"}>
-          <MoreAppsButton />
           <SendFeedbackButton />
+          <MoreAppsButton />
           <AboutButton />
         </Stack>
       </Collapse>

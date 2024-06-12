@@ -21,7 +21,7 @@ const TokenList: FC<TokenListProps> = ({
       {
         tokens && tokens.map(token => {
           return (
-            <Group key={token.name} justify='space-between' gap={"xl"} align='center' wrap='nowrap'>
+            <Group key={token.address} justify='space-between' gap={"xl"} align='center' wrap='nowrap'>
               <Group>
                 <Stack gap={2} align='start'>
                   <Anchor size='sm' c={'var(--mantine-color-text)'} target='_blank' href={token.link}>
@@ -44,7 +44,7 @@ const TokenList: FC<TokenListProps> = ({
                     </Tooltip>
                   )}
                 </CopyButton>
-                <ActionIcon variant="transparent" component="a" href={token.link} target="_blank">
+                <ActionIcon variant="subtle" component="a" href={token.link} target="_blank">
                   <IconExternalLink size={16} />
                 </ActionIcon>
               </Group>

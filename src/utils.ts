@@ -8,7 +8,20 @@ const formatBalance = (balance: string | null) => {
 
 const isEns = (address: string) => address.substring(address.length - 4, address.length) === '.eth';
 
+const isValidAddress = (address: string) => {
+  if (
+    address !== undefined &&
+    address !== null &&
+    (isEns(address) || address.length === 42)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export {
   formatBalance,
-  isEns
+  isEns,
+  isValidAddress
 }
