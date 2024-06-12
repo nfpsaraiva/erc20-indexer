@@ -1,4 +1,4 @@
-import { ActionIcon, Burger, Button, Collapse, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Burger, Collapse, Group, Stack, Text } from "@mantine/core";
 import { FC } from "react";
 import ColorThemeSwitcher from "./ColorThemeSwitcher/ColorThemeSwitcher";
 import { useDisclosure } from "@mantine/hooks";

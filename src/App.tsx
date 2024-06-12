@@ -25,6 +25,7 @@ const App: FC = () => {
 
   const {
     data: balances,
+    refetch: refetchBalances,
   } = useBalances(
     address as string,
     manualAddress,
@@ -36,13 +37,18 @@ const App: FC = () => {
     data: tokens,
     isLoading,
     isError,
-    refetch,
+    refetch: refetchTokens,
     isRefetching
-
   } = useTokens(
     balances,
     handlers.increment
   );
+
+  const refetch = async () => {
+    handlers.reset();
+    await refetchBalances();
+    await refetchTokens();
+  }
 
   return (
     <Center my={"xl"} mx={"sm"}>
@@ -61,7 +67,7 @@ const App: FC = () => {
         </Card.Section>
         <Box my={"md"}>
           {
-            isLoading && balances &&
+            (isLoading || isRefetching) && balances &&
             <Stack align="center">
               <RingProgress
                 roundCaps
@@ -88,7 +94,7 @@ const App: FC = () => {
             </Center>
           }
           {
-            tokens &&
+            tokens && !isRefetching &&
             <TokenList
               tokens={tokens}
             />
