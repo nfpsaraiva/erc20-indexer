@@ -37,8 +37,6 @@ const Menu: FC<MenuProps> = ({ tokensCount, refetch, isRefetching }: MenuProps) 
       </Group >
       <Collapse in={opened}>
         <Stack gap={"xs"}>
-          <SendFeedbackButton />
-          <MoreAppsButton />
           <AboutButton />
         </Stack>
       </Collapse>
